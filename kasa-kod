@@ -1,0 +1,66 @@
+/*
+Furkan Esmeyar 
+
+Arduino ile Kasa Yapımı
+
+Siz projeye servo motor ekleyebilirsiniz. Ekliyecektimde Servo motorum yoktu.
+*/
+
+#include <LiquidCrystal.h>
+int pot= A1;
+ int sc=8;
+ int izin;
+byte yan_deneme=0;
+int pots;
+
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+void setup() {
+lcd.begin(16, 2);
+pinMode (sc, INPUT);
+
+Serial.begin(9600);
+
+}
+
+void loop() {
+pots= analogRead(pot);
+izin = digitalRead (sc);
+ pots = map (pots,0,1023,0,6);
+ if (izin == HIGH)
+ {
+if (pots == 2){ // buradaki "2" rakamı şifre oluyor sizde 0-5 arası bir şifre seçebilirsiniz.
+lcd.clear();
+lcd.print ("Kasa Acildi");
+delay(2000);
+}
+else {
+  lcd.clear();
+  lcd.print ("Yanlis Sifre");
+  yan_deneme++;
+  delay(2000);
+  }
+ }
+
+ else {
+  lcd.clear();
+lcd.print ("Sifreyi Secin");
+lcd.setCursor(0,1);
+lcd.print(pots);
+  delay(1000);
+  }
+
+
+  
+  
+  while (yan_deneme == 6) // ekranda bu yazı çıktıktan sonra kurtulmak için arduinoyu yeniden başlatın.
+  // yan_deneme 1 tanesi 2 saniyeye denk geliyor 6 rakamı 12 saniye demek.
+  {
+lcd.clear();
+    lcd.print ("Hakkiniz Doldu");
+    delay(2000);
+    }
+
+  }
+  
